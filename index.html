@@ -50,24 +50,31 @@ a:focus-visible { outline:3px solid var(--accent); outline-offset:6px; }
 .section h2 span { color:var(--accent); }
 .section .note { margin:0 0 26px; padding:0 22px; color:var(--muted); font-size:17px; line-height:1.45; max-width:760px; }
 
-/* tiles */
-.grid { display:grid; grid-template-columns:repeat(4, minmax(0,1fr)); gap:20px; padding:0 22px; }
-.tile { position:relative; display:block; aspect-ratio:9/16; overflow:hidden; border:1px solid var(--border); background:var(--black); color:var(--text); text-decoration:none; border-radius:10px; transition:transform .5s, border-color .5s, box-shadow .5s, opacity .5s; animation:arrive .65s both; }
-.pic { position:absolute; inset:0; overflow:hidden; }
-.pic img, .pic video { width:100%; height:100%; object-fit:cover; object-position:center top; display:block; transition:transform .5s; }
-.pic:after { content:""; position:absolute; inset:60% 0 0; background:linear-gradient(transparent, var(--black)); }
-.chip { position:absolute; top:16px; left:18px; z-index:2; display:flex; align-items:center; gap:7px; padding:7px 10px; font-size:10px; letter-spacing:.3em; white-space:nowrap; background:color-mix(in srgb, var(--black) 85%, transparent); }
+/* cards */
+.grid { display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:24px; padding:0 22px; }
+.card { display:flex; flex-direction:column; background:#101113; border:1px solid #ffffff14; border-radius:16px; overflow:hidden; color:var(--text); text-decoration:none; transition:transform .4s, border-color .4s, box-shadow .4s; animation:arrive .65s both; }
+.card:hover, .card:focus-visible { transform:translateY(-6px); border-color:var(--accent); box-shadow:var(--glow); }
+.media { position:relative; aspect-ratio:3/4; background:var(--bg, #000); overflow:hidden; }
+.media img, .media video { position:absolute; inset:0; width:100%; height:100%; display:block; }
+.media img { object-fit:cover; transition:transform .5s, opacity .35s; }
+.media video { object-fit:contain; background:var(--bg, #000); opacity:0; transition:opacity .35s; }
+.card.playing .media video { opacity:1; }
+.card:hover .media img { transform:scale(1.03); }
+.chip { position:absolute; bottom:14px; left:14px; z-index:2; display:flex; align-items:center; gap:7px; padding:7px 10px; font-size:10px; letter-spacing:.3em; white-space:nowrap; background:color-mix(in srgb, var(--black) 80%, transparent); border-radius:4px; }
+.chip.preview { left:auto; right:14px; letter-spacing:.2em; color:var(--muted); }
+.card.playing .chip.preview { opacity:0; }
+@media (hover: none) { .chip.preview { display:none; } }
 .dot { width:6px; height:6px; border-radius:50%; background:var(--accent); animation:pulse 2s infinite; }
 .chip.example .dot { background:var(--muted); animation:none; }
-.label { position:absolute; inset-inline:0; bottom:0; z-index:2; background:var(--black); padding:13px 20px 14px; font-size:25px; line-height:1; }
-.label > span { display:flex; justify-content:space-between; align-items:center; gap:8px; }
-.label small { display:block; margin-top:6px; font-family:Barlow, sans-serif; font-style:normal; font-weight:500; text-transform:none; font-size:13.5px; line-height:1.35; color:var(--muted); }
-.arrow { color:var(--accent); font-style:normal; transition:transform .5s; }
-.grid:has(.tile:hover) .tile:not(:hover) { opacity:.7; }
-.tile:hover, .tile:focus-visible { border-color:var(--accent); box-shadow:var(--glow); transform:translateY(-6px); }
-.tile:hover .pic img, .tile:hover .pic video { transform:scale(1.06); }
-.tile:hover .arrow { transform:translate(6px); }
-.grid .tile:nth-child(2) { animation-delay:70ms; } .grid .tile:nth-child(3) { animation-delay:.14s; } .grid .tile:nth-child(4) { animation-delay:.21s; }
+.info { padding:22px 24px 24px; display:flex; flex-direction:column; flex:1; }
+.info h3 { margin:0; font-family:Barlow, sans-serif; font-weight:700; font-size:26px; letter-spacing:-.01em; }
+.info .tagline { margin:6px 0 0; font-weight:600; font-size:16px; }
+.info .blurb { margin:12px 0 0; color:var(--muted); font-size:15.5px; line-height:1.55; flex:1; }
+.info .cat { margin:18px 0 0; display:flex; justify-content:space-between; align-items:center; font-family:"Barlow Condensed", sans-serif; font-style:italic; font-weight:800; font-size:15px; letter-spacing:.08em; text-transform:uppercase; color:var(--accent); }
+.info .cat.muted { color:var(--muted); }
+.arrow { color:var(--accent); font-style:normal; transition:transform .4s; }
+.card:hover .arrow { transform:translate(6px); }
+.grid .card:nth-child(2) { animation-delay:70ms; } .grid .card:nth-child(3) { animation-delay:.14s; }
 
 /* steps */
 .steps-wrap { padding:70px 0 45px; }
@@ -90,7 +97,7 @@ footer p { margin:0; letter-spacing:.3em; font-size:12px; }
   .hero { grid-template-columns:1fr; gap:30px; padding:30px 0 34px; }
   .hero h1 { font-size:88px; }
   .motto { display:none; }
-  .grid { grid-template-columns:repeat(3, minmax(0,1fr)); }
+  .grid { grid-template-columns:repeat(2, minmax(0,1fr)); }
   .steps { grid-template-columns:repeat(2, 1fr); gap:24px; }
 }
 @media (width <= 639px) {
@@ -105,10 +112,8 @@ footer p { margin:0; letter-spacing:.3em; font-size:12px; }
   .hero p { margin-top:18px; font-size:18px; }
   .section h2 { padding:0 8px; font-size:40px; }
   .section .note { padding:0 8px; font-size:15px; }
-  .grid { grid-template-columns:repeat(2, minmax(0,1fr)); gap:14px; padding-inline:8px; }
-  .chip { top:10px; left:8px; padding:6px; font-size:8px; letter-spacing:.12em; }
-  .label { padding:12px 10px; font-size:19px; }
-  .label small { font-size:12px; }
+  .grid { grid-template-columns:1fr; gap:18px; padding-inline:8px; }
+  .chip { padding:6px 8px; font-size:9px; letter-spacing:.14em; }
   .slash { opacity:.4; width:260px; height:45px; left:-180px; }
   .slash.right { right:-180px; }
   .steps { grid-template-columns:1fr; }
@@ -120,7 +125,6 @@ footer p { margin:0; letter-spacing:.3em; font-size:12px; }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *:after { transition:none !important; animation:none !important; }
-  .tile:hover, .tile:focus-visible { transform:none; }
   html { scroll-behavior:auto; }
 }
 </style>
@@ -155,12 +159,12 @@ footer p { margin:0; letter-spacing:.3em; font-size:12px; }
     <h2 class="display">Ready to reskin: <span>click to play</span></h2>
     <p class="note">Built and playable now. Each one is reskinned in your brand with your own end card and call to action.</p>
     <div class="grid">
-      <a class="tile" href="https://jonnyshan.github.io/heineken-puzzle/" target="_blank" rel="noopener"><div class="pic"><video src="heineken-hover.mp4" poster="heineken.webp" muted loop playsinline preload="none" aria-hidden="true"></video></div><div class="chip"><i class="dot"></i>PLAY NOW</div><div class="label"><span>Heineken Jigsaw <i class="arrow">&rarr;</i></span><small>Solve the bottle jigsaw against the clock.</small></div></a>
-      <a class="tile" href="https://jonnyshan.github.io/forgotten-island-memory-match/" target="_blank" rel="noopener"><div class="pic"><video src="forgotten-hover.mp4" poster="forgotten.webp" muted loop playsinline preload="none" aria-hidden="true"></video></div><div class="chip"><i class="dot"></i>PLAY NOW</div><div class="label"><span>Forgotten Island <i class="arrow">&rarr;</i></span><small>Memory match over a video scene.</small></div></a>
-      <a class="tile" href="https://gizmo.gamify.com/s3/games.developer.gamify.com/games/8392ac5e-90de-48a5-9d7f-8f64a828e9e2/index.html" target="_blank" rel="noopener"><div class="pic"><video src="flipper-hover.mp4" poster="flipper.webp" muted loop playsinline preload="none" aria-hidden="true"></video></div><div class="chip"><i class="dot"></i>PLAY NOW</div><div class="label"><span>Flipper <i class="arrow">&rarr;</i></span><small>Flip the cards to find the pairs.</small></div></a>
-      <a class="tile" href="https://gizmo.gamify.com/s3/games.developer.gamify.com/games/9ed78c7b-6149-45d1-9584-1d7a12ae8a96/index.html" target="_blank" rel="noopener"><div class="pic"><video src="read-hover.mp4" poster="read.webp" muted loop playsinline preload="none" aria-hidden="true"></video></div><div class="chip"><i class="dot"></i>PLAY NOW</div><div class="label"><span>Nonstop 4 Letters <i class="arrow">&rarr;</i></span><small>Make 4 letter words before time runs out.</small></div></a>
-      <a class="tile" href="https://gizmo.gamify.com/s3/games.developer.gamify.com/games/4aabee89-854e-4d70-a78d-8b0cbe03a0af/index.html" target="_blank" rel="noopener"><div class="pic"><video src="ten-hover.mp4" poster="ten.webp" muted loop playsinline preload="none" aria-hidden="true"></video></div><div class="chip"><i class="dot"></i>PLAY NOW</div><div class="label"><span>TEN <i class="arrow">&rarr;</i></span><small>Number tile puzzle.</small></div></a>
-      <a class="tile" href="https://gizmo.gamify.com/s3/games.developer.gamify.com/games/47bbe391-c503-46c5-8db3-3a637704cd02/index.html" target="_blank" rel="noopener"><div class="pic"><video src="glass-hover.mp4" poster="glass.webp" muted loop playsinline preload="none" aria-hidden="true"></video></div><div class="chip"><i class="dot"></i>PLAY NOW</div><div class="label"><span>Filled Glass <i class="arrow">&rarr;</i></span><small>Physics puzzle. Fill the glass to the line.</small></div></a>
+      <a class="card" href="https://jonnyshan.github.io/heineken-puzzle/" target="_blank" rel="noopener"><div class="media" style="--bg:#02110a"><img src="cover-heineken.webp" alt="Jigsaw Challenge" loading="lazy"><video src="heineken-hover.mp4" muted loop playsinline preload="none" aria-hidden="true"></video><span class="chip"><i class="dot"></i>PLAY NOW</span><span class="chip preview">HOVER TO PREVIEW</span></div><div class="info"><h3>Jigsaw Challenge</h3><p class="tagline">Solve it. Unlock epic.</p><p class="blurb">A mobile puzzle game tied to Heineken&#x27;s global music platform. Solve the bottle jigsaw against the clock to unlock festival drops, gig tickets and nights out.</p><p class="cat"><span>Beverage · Puzzle</span> <i class="arrow">&rarr;</i></p></div></a>
+      <a class="card" href="https://jonnyshan.github.io/forgotten-island-memory-match/" target="_blank" rel="noopener"><div class="media" style="--bg:#1b1036"><img src="cover-forgotten.webp" alt="Forgotten Island" loading="lazy"><video src="forgotten-hover.mp4" muted loop playsinline preload="none" aria-hidden="true"></video><span class="chip"><i class="dot"></i>PLAY NOW</span><span class="chip preview">HOVER TO PREVIEW</span></div><div class="info"><h3>Forgotten Island</h3><p class="tagline">Match the memories.</p><p class="blurb">A memory match played over a living video scene. Pair the keepsakes on the beach to bring two friends back together.</p><p class="cat"><span>Memory match · Story</span> <i class="arrow">&rarr;</i></p></div></a>
+      <a class="card" href="https://gizmo.gamify.com/s3/games.developer.gamify.com/games/8392ac5e-90de-48a5-9d7f-8f64a828e9e2/index.html" target="_blank" rel="noopener"><div class="media" style="--bg:#3a1f04"><img src="cover-flipper.webp" alt="Flipper" loading="lazy"><video src="flipper-hover.mp4" muted loop playsinline preload="none" aria-hidden="true"></video><span class="chip"><i class="dot"></i>PLAY NOW</span><span class="chip preview">HOVER TO PREVIEW</span></div><div class="info"><h3>Flipper</h3><p class="tagline">Flip it. Match it.</p><p class="blurb">The classic card-flip memory game. Every card face can carry a product, a logo or an offer.</p><p class="cat"><span>Memory match</span> <i class="arrow">&rarr;</i></p></div></a>
+      <a class="card" href="https://gizmo.gamify.com/s3/games.developer.gamify.com/games/9ed78c7b-6149-45d1-9584-1d7a12ae8a96/index.html" target="_blank" rel="noopener"><div class="media" style="--bg:#032b22"><img src="cover-read.webp" alt="Nonstop 4 Letters" loading="lazy"><video src="read-hover.mp4" muted loop playsinline preload="none" aria-hidden="true"></video><span class="chip"><i class="dot"></i>PLAY NOW</span><span class="chip preview">HOVER TO PREVIEW</span></div><div class="info"><h3>Nonstop 4 Letters</h3><p class="tagline">Think fast. Spell faster.</p><p class="blurb">Make as many four letter words as you can before the clock runs out. Easy to theme around brand words and product names.</p><p class="cat"><span>Word puzzle</span> <i class="arrow">&rarr;</i></p></div></a>
+      <a class="card" href="https://gizmo.gamify.com/s3/games.developer.gamify.com/games/4aabee89-854e-4d70-a78d-8b0cbe03a0af/index.html" target="_blank" rel="noopener"><div class="media" style="--bg:#151a3a"><img src="cover-ten.webp" alt="TEN" loading="lazy"><video src="ten-hover.mp4" muted loop playsinline preload="none" aria-hidden="true"></video><span class="chip"><i class="dot"></i>PLAY NOW</span><span class="chip preview">HOVER TO PREVIEW</span></div><div class="info"><h3>TEN</h3><p class="tagline">Merge to ten.</p><p class="blurb">A number tile puzzle. Drop and merge tiles to climb the numbers. Simple to learn, hard to put down.</p><p class="cat"><span>Number puzzle</span> <i class="arrow">&rarr;</i></p></div></a>
+      <a class="card" href="https://gizmo.gamify.com/s3/games.developer.gamify.com/games/47bbe391-c503-46c5-8db3-3a637704cd02/index.html" target="_blank" rel="noopener"><div class="media" style="--bg:#1c2410"><img src="cover-glass.webp" alt="Filled Glass" loading="lazy"><video src="glass-hover.mp4" muted loop playsinline preload="none" aria-hidden="true"></video><span class="chip"><i class="dot"></i>PLAY NOW</span><span class="chip preview">HOVER TO PREVIEW</span></div><div class="info"><h3>Filled Glass</h3><p class="tagline">Fill it to the line.</p><p class="blurb">Drop the balls and guide them into the glass. A physics puzzle made for a drinks brand.</p><p class="cat"><span>Physics puzzle</span> <i class="arrow">&rarr;</i></p></div></a>
     </div>
   </section>
 
@@ -168,15 +172,15 @@ footer p { margin:0; letter-spacing:.3em; font-size:12px; }
     <h2 class="display">More <span>formats</span></h2>
     <p class="note">Other styles we can build. These are examples from around the market, shown for the mechanic.</p>
     <div class="grid">
-      <a class="tile" href="https://mylogo.adictiz.com/hidden-object" target="_blank" rel="noopener"><div class="pic"><video src="hidden-objects.mp4" poster="hidden-objects.webp" muted loop playsinline preload="none" aria-hidden="true"></video></div><div class="chip example"><i class="dot"></i>EXAMPLE</div><div class="label"><span>Hidden Object <i class="arrow">&rarr;</i></span><small>Find the hidden items in a busy scene.</small></div></a>
-      <div class="tile"><div class="pic"><video src="tile-match.mp4" poster="tile-match.webp" muted loop playsinline preload="none" aria-hidden="true"></video></div><div class="chip example"><i class="dot"></i>EXAMPLE</div><div class="label"><span>Tile Match</span><small>Collect three of a kind before the tray fills.</small></div></div>
-      <div class="tile"><div class="pic"><video src="goods-sort.mp4" poster="goods-sort.webp" muted loop playsinline preload="none" aria-hidden="true"></video></div><div class="chip example"><i class="dot"></i>EXAMPLE</div><div class="label"><span>Goods Sort</span><small>Sort products on the shelves into threes.</small></div></div>
-      <div class="tile"><div class="pic"><video src="save-them.mp4" poster="save-them.webp" muted loop playsinline preload="none" aria-hidden="true"></video></div><div class="chip example"><i class="dot"></i>EXAMPLE</div><div class="label"><span>Save Them</span><small>Pick the right item to solve the scene.</small></div></div>
-      <a class="tile" href="https://marketing.playable.com/en/games-library-spot-the-difference-pure-pet-food" target="_blank" rel="noopener"><div class="pic"><img src="spotdiff.webp" alt="" loading="lazy"></div><div class="chip example"><i class="dot"></i>EXAMPLE</div><div class="label"><span>Spot the Difference <i class="arrow">&rarr;</i></span><small>Tap the differences between two images.</small></div></a>
-      <a class="tile" href="https://marketing.playable.com/en/games-library-sliding-puzzle-scamp-and-dude" target="_blank" rel="noopener"><div class="pic"><img src="sliding.webp" alt="" loading="lazy"></div><div class="chip example"><i class="dot"></i>EXAMPLE</div><div class="label"><span>Sliding Puzzle <i class="arrow">&rarr;</i></span><small>Slide the tiles to reveal the product.</small></div></a>
-      <a class="tile" href="https://cdn-factory.marketjs.com/en/gardenscapes-playable-ad-demo/index.html" target="_blank" rel="noopener"><div class="pic"><img src="match3.webp" alt="" loading="lazy"></div><div class="chip example"><i class="dot"></i>EXAMPLE</div><div class="label"><span>Match-3 <i class="arrow">&rarr;</i></span><small>Candy Crush style matching.</small></div></a>
-      <a class="tile" href="https://marketing.playable.com/en/games-library-place-the-item-danfoss" target="_blank" rel="noopener"><div class="pic"><img src="dragdrop.webp" alt="" loading="lazy"></div><div class="chip example"><i class="dot"></i>EXAMPLE</div><div class="label"><span>Drag &amp; Drop <i class="arrow">&rarr;</i></span><small>Sort the products into the right zones.</small></div></a>
-      <a class="tile" href="https://chimpanzee-dev.itch.io/ninja-rescue-pin" target="_blank" rel="noopener"><div class="pic"><img src="pinpull.webp" alt="" loading="lazy"></div><div class="chip example"><i class="dot"></i>EXAMPLE</div><div class="label"><span>Pull the Pin <i class="arrow">&rarr;</i></span><small>The logic puzzle from the mobile game ads.</small></div></a>
+      <a class="card" href="https://mylogo.adictiz.com/hidden-object" target="_blank" rel="noopener"><div class="media" style="--bg:#ffffff"><img src="cover-hidden-objects.webp" alt="Hidden Object" loading="lazy"><video src="hidden-objects.mp4" muted loop playsinline preload="none" aria-hidden="true"></video><span class="chip example"><i class="dot"></i>EXAMPLE</span><span class="chip preview">HOVER TO PREVIEW</span></div><div class="info"><h3>Hidden Object</h3><p class="tagline">Find all ten.</p><p class="blurb">Spot the hidden items in a busy scene. Swap in your own products and brand world.</p><p class="cat muted"><span>Hidden object</span> <i class="arrow">&rarr;</i></p></div></a>
+      <div class="card"><div class="media" style="--bg:#4c0c07"><img src="cover-tile-match.webp" alt="Tile Match" loading="lazy"><video src="tile-match.mp4" muted loop playsinline preload="none" aria-hidden="true"></video><span class="chip example"><i class="dot"></i>EXAMPLE</span><span class="chip preview">HOVER TO PREVIEW</span></div><div class="info"><h3>Tile Match</h3><p class="tagline">Three of a kind.</p><p class="blurb">Tap tiles into the tray and clear them in threes before it fills. Every tile can be a product shot.</p><p class="cat muted"><span>Tile match</span></p></div></div>
+      <div class="card"><div class="media" style="--bg:#f3e5d1"><img src="cover-goods-sort.webp" alt="Goods Sort" loading="lazy"><video src="goods-sort.mp4" muted loop playsinline preload="none" aria-hidden="true"></video><span class="chip example"><i class="dot"></i>EXAMPLE</span><span class="chip preview">HOVER TO PREVIEW</span></div><div class="info"><h3>Goods Sort</h3><p class="tagline">Stack the shelves.</p><p class="blurb">Sort products on the shelves into matching threes. Made for FMCG, drinks and retail.</p><p class="cat muted"><span>Sort puzzle</span></p></div></div>
+      <div class="card"><div class="media" style="--bg:#f5efe5"><img src="cover-save-them.webp" alt="Save Them" loading="lazy"><video src="save-them.mp4" muted loop playsinline preload="none" aria-hidden="true"></video><span class="chip example"><i class="dot"></i>EXAMPLE</span><span class="chip preview">HOVER TO PREVIEW</span></div><div class="info"><h3>Save Them</h3><p class="tagline">Pick the right item.</p><p class="blurb">A logic puzzle. Choose the item that solves the scene, with your product as the hero.</p><p class="cat muted"><span>Logic puzzle</span></p></div></div>
+      <a class="card" href="https://marketing.playable.com/en/games-library-spot-the-difference-pure-pet-food" target="_blank" rel="noopener"><div class="media" style="--bg:#062a24"><img src="cover-spotdiff.webp" alt="Spot the Difference" loading="lazy"><span class="chip example"><i class="dot"></i>EXAMPLE</span></div><div class="info"><h3>Spot the Difference</h3><p class="tagline">Spot all four.</p><p class="blurb">Tap the differences between two pictures. A simple way to put a product front and centre.</p><p class="cat muted"><span>Spot the difference</span> <i class="arrow">&rarr;</i></p></div></a>
+      <a class="card" href="https://marketing.playable.com/en/games-library-sliding-puzzle-scamp-and-dude" target="_blank" rel="noopener"><div class="media" style="--bg:#0b2230"><img src="cover-sliding.webp" alt="Sliding Puzzle" loading="lazy"><span class="chip example"><i class="dot"></i>EXAMPLE</span></div><div class="info"><h3>Sliding Puzzle</h3><p class="tagline">Slide to reveal.</p><p class="blurb">Slide the tiles to rebuild the picture and reveal the product.</p><p class="cat muted"><span>Sliding puzzle</span> <i class="arrow">&rarr;</i></p></div></a>
+      <a class="card" href="https://cdn-factory.marketjs.com/en/gardenscapes-playable-ad-demo/index.html" target="_blank" rel="noopener"><div class="media" style="--bg:#0e2a12"><img src="cover-match3.webp" alt="Match-3" loading="lazy"><span class="chip example"><i class="dot"></i>EXAMPLE</span></div><div class="info"><h3>Match-3</h3><p class="tagline">Match three.</p><p class="blurb">Candy Crush style matching, with products as the pieces.</p><p class="cat muted"><span>Match-3</span> <i class="arrow">&rarr;</i></p></div></a>
+      <a class="card" href="https://marketing.playable.com/en/games-library-place-the-item-danfoss" target="_blank" rel="noopener"><div class="media" style="--bg:#2a0606"><img src="cover-dragdrop.webp" alt="Drag &amp; Drop" loading="lazy"><span class="chip example"><i class="dot"></i>EXAMPLE</span></div><div class="info"><h3>Drag &amp; Drop</h3><p class="tagline">Sort it out.</p><p class="blurb">Drag each item into the right zone against the clock.</p><p class="cat muted"><span>Drag &amp; drop</span> <i class="arrow">&rarr;</i></p></div></a>
+      <a class="card" href="https://chimpanzee-dev.itch.io/ninja-rescue-pin" target="_blank" rel="noopener"><div class="media" style="--bg:#20123a"><img src="cover-pinpull.webp" alt="Pull the Pin" loading="lazy"><span class="chip example"><i class="dot"></i>EXAMPLE</span></div><div class="info"><h3>Pull the Pin</h3><p class="tagline">Pull the right pin.</p><p class="blurb">The logic puzzle from the mobile game ads. One wrong pin and it&#x27;s over.</p><p class="cat muted"><span>Logic puzzle</span> <i class="arrow">&rarr;</i></p></div></a>
     </div>
   </section>
 
@@ -200,9 +204,9 @@ footer p { margin:0; letter-spacing:.3em; font-size:12px; }
 <script>
 (function(){
   var b=document.getElementById('bar');function f(){b.classList.toggle('scrolled',window.scrollY>10)}window.addEventListener('scroll',f,{passive:true});f();
-  var tiles=[].slice.call(document.querySelectorAll('.tile'));
-  function play(v){ if(!v) return; v.preload='auto'; var p=v.play(); if(p&&p.catch) p.catch(function(){}); }
-  function stop(v){ if(!v) return; v.pause(); try{ v.currentTime=0; }catch(e){} }
+  var tiles=[].slice.call(document.querySelectorAll('.card'));
+  function play(v){ if(!v) return; v.closest('.card').classList.add('playing'); v.preload='auto'; var p=v.play(); if(p&&p.catch) p.catch(function(){}); }
+  function stop(v){ if(!v) return; v.closest('.card').classList.remove('playing'); v.pause(); try{ v.currentTime=0; }catch(e){} }
   if (window.matchMedia('(hover: hover)').matches) {
     tiles.forEach(function(t){ var v=t.querySelector('video');
       t.addEventListener('mouseenter',function(){play(v)});
