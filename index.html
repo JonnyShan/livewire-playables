@@ -52,19 +52,19 @@ a:focus-visible { outline:3px solid var(--accent); outline-offset:6px; }
 
 /* tiles */
 .grid { display:grid; grid-template-columns:repeat(4, minmax(0,1fr)); gap:20px; padding:0 22px; }
-.tile { position:relative; display:block; aspect-ratio:9/16; overflow:hidden; border:1px solid var(--border); background:var(--black); color:var(--text); text-decoration:none; transform:skew(-6deg); transition:transform .5s, border-color .5s, box-shadow .5s, opacity .5s; animation:arrive .65s both; }
-.pic { position:absolute; inset:0 -10%; overflow:hidden; transform:skew(6deg); }
+.tile { position:relative; display:block; aspect-ratio:9/16; overflow:hidden; border:1px solid var(--border); background:var(--black); color:var(--text); text-decoration:none; border-radius:10px; transition:transform .5s, border-color .5s, box-shadow .5s, opacity .5s; animation:arrive .65s both; }
+.pic { position:absolute; inset:0; overflow:hidden; }
 .pic img, .pic video { width:100%; height:100%; object-fit:cover; object-position:center top; display:block; transition:transform .5s; }
 .pic:after { content:""; position:absolute; inset:60% 0 0; background:linear-gradient(transparent, var(--black)); }
-.chip { position:absolute; top:16px; left:18px; z-index:2; display:flex; align-items:center; gap:7px; padding:7px 10px; font-size:10px; letter-spacing:.3em; white-space:nowrap; background:color-mix(in srgb, var(--black) 85%, transparent); transform:skew(6deg); }
+.chip { position:absolute; top:16px; left:18px; z-index:2; display:flex; align-items:center; gap:7px; padding:7px 10px; font-size:10px; letter-spacing:.3em; white-space:nowrap; background:color-mix(in srgb, var(--black) 85%, transparent); }
 .dot { width:6px; height:6px; border-radius:50%; background:var(--accent); animation:pulse 2s infinite; }
 .chip.example .dot { background:var(--muted); animation:none; }
 .label { position:absolute; inset-inline:0; bottom:0; z-index:2; background:var(--black); padding:13px 20px 14px; font-size:25px; line-height:1; }
-.label > span { display:flex; justify-content:space-between; align-items:center; gap:8px; transform:skew(6deg); }
-.label small { display:block; transform:skew(6deg); margin-top:6px; font-family:Barlow, sans-serif; font-style:normal; font-weight:500; text-transform:none; font-size:13.5px; line-height:1.35; color:var(--muted); }
+.label > span { display:flex; justify-content:space-between; align-items:center; gap:8px; }
+.label small { display:block; margin-top:6px; font-family:Barlow, sans-serif; font-style:normal; font-weight:500; text-transform:none; font-size:13.5px; line-height:1.35; color:var(--muted); }
 .arrow { color:var(--accent); font-style:normal; transition:transform .5s; }
 .grid:has(.tile:hover) .tile:not(:hover) { opacity:.7; }
-.tile:hover, .tile:focus-visible { border-color:var(--accent); box-shadow:var(--glow); transform:skew(-6deg) translateY(-6px); }
+.tile:hover, .tile:focus-visible { border-color:var(--accent); box-shadow:var(--glow); transform:translateY(-6px); }
 .tile:hover .pic img, .tile:hover .pic video { transform:scale(1.06); }
 .tile:hover .arrow { transform:translate(6px); }
 .grid .tile:nth-child(2) { animation-delay:70ms; } .grid .tile:nth-child(3) { animation-delay:.14s; } .grid .tile:nth-child(4) { animation-delay:.21s; }
@@ -120,7 +120,7 @@ footer p { margin:0; letter-spacing:.3em; font-size:12px; }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *:after { transition:none !important; animation:none !important; }
-  .tile:hover, .tile:focus-visible { transform:skew(-6deg); }
+  .tile:hover, .tile:focus-visible { transform:none; }
   html { scroll-behavior:auto; }
 }
 </style>
