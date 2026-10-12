@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Puzzle &amp; Casual Playables | Livewire</title>
+<meta name="description" content="Puzzle and casual game formats for the 30 second playable window.">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@500;600&family=Barlow+Condensed:ital,wght@1,800;1,900&display=swap" rel="stylesheet">
+<style>
+:root { --bg:#07080a; --accent:#cf0; --text:#fff; --muted:#a3a3a3; --black:#000; --border:#cf06; --glow:0 0 32px #ccff0059; --light:#c0e5eb1f; }
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin:0; background: radial-gradient(ellipse 65% 35% at 50% 0%, var(--light), transparent), var(--bg); color:var(--text); font-family: Barlow, sans-serif; font-weight:500; min-height:100svh; overflow-x:clip; position:relative; }
+body:after { content:""; position:fixed; inset:0; pointer-events:none; z-index:5; opacity:.03; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Cpath fill='%23fff' filter='url(%23n)' opacity='.8' d='M0 0h180v180H0z'/%3E%3C/svg%3E"); }
+a:focus-visible { outline:3px solid var(--accent); outline-offset:6px; }
+.inner { width:min(1280px, 100% - 96px); margin-inline:auto; position:relative; }
+.display, .label, .btn { font-family:"Barlow Condensed", sans-serif; font-style:italic; font-weight:800; text-transform:uppercase; }
+
+/* bar */
+.bar { position:sticky; top:0; z-index:10; transition:background .25s; }
+.bar.scrolled { background:color-mix(in srgb, var(--black) 90%, transparent); backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px); }
+.bar .inner { display:flex; align-items:center; gap:64px; height:86px; }
+.bar .logo img { height:34px; display:block; }
+.nav { display:flex; gap:36px; }
+.nav a { color:var(--text); font-size:14px; text-decoration:none; min-height:44px; display:flex; align-items:center; }
+.btn { background:var(--accent); color:var(--black); height:48px; padding:0 30px; font-size:19px; text-decoration:none; display:inline-flex; align-items:center; transform:skew(-8deg); }
+.btn span { transform:skew(8deg); }
+.bar .btn { margin-left:auto; }
+@media (hover:hover) { .btn:hover { background:var(--text); } }
+
+/* hero */
+.hero { padding:40px 0 30px; }
+.hero h1 { margin:0; font-size:clamp(56px, 8.6vw, 124px); font-weight:900; line-height:.93; }
+.hero h1 span { color:var(--accent); }
+.hero p { margin:22px 0 0; font-size:24px; }
+.motto { margin-top:34px; letter-spacing:.3em; font-family:"Barlow Condensed", sans-serif; font-size:13px; font-weight:800; line-height:1.4; }
+.motto:after { content:""; display:block; width:32px; height:3px; margin-top:12px; background:var(--accent); }
+
+/* slashes */
+.slash { position:absolute; z-index:-1; background:var(--accent); width:470px; height:80px; left:-330px; top:560px; transform:rotate(33deg); }
+.slash.right { left:auto; right:-320px; top:1260px; transform:rotate(-32deg); }
+.slash.lower { top:2300px; transform:rotate(-35deg); }
+
+/* sections */
+.section { padding-top:34px; scroll-margin-top:100px; }
+.section h2 { margin:0 0 8px; padding:0 22px; font-size:48px; line-height:1; }
+.section h2 span { color:var(--accent); }
+.section .note { margin:0 0 26px; padding:0 22px; color:var(--muted); font-size:17px; line-height:1.45; max-width:760px; }
+
+/* tiles */
+.grid { display:grid; grid-template-columns:repeat(4, minmax(0,1fr)); gap:20px; padding:0 22px; }
+.tile { position:relative; display:block; aspect-ratio:9/16; overflow:hidden; border:1px solid var(--border); background:var(--black); color:var(--text); text-decoration:none; transform:skew(-6deg); transition:transform .5s, border-color .5s, box-shadow .5s, opacity .5s; animation:arrive .65s both; }
+.pic { position:absolute; inset:0 -10%; overflow:hidden; transform:skew(6deg); }
+.pic img, .pic video { width:100%; height:100%; object-fit:cover; object-position:center top; display:block; transition:transform .5s; }
+.pic:after { content:""; position:absolute; inset:60% 0 0; background:linear-gradient(transparent, var(--black)); }
+.chip { position:absolute; top:16px; left:18px; z-index:2; display:flex; align-items:center; gap:7px; padding:7px 10px; font-size:10px; letter-spacing:.3em; white-space:nowrap; background:color-mix(in srgb, var(--black) 85%, transparent); transform:skew(6deg); }
+.dot { width:6px; height:6px; border-radius:50%; background:var(--accent); animation:pulse 2s infinite; }
+.chip.example .dot { background:var(--muted); animation:none; }
+.label { position:absolute; inset-inline:0; bottom:0; z-index:2; background:var(--black); padding:13px 20px 14px; font-size:25px; line-height:1; }
+.label > span { display:flex; justify-content:space-between; align-items:center; gap:8px; transform:skew(6deg); }
+.label small { display:block; transform:skew(6deg); margin-top:6px; font-family:Barlow, sans-serif; font-style:normal; font-weight:500; text-transform:none; font-size:13.5px; line-height:1.35; color:var(--muted); }
+.arrow { color:var(--accent); font-style:normal; transition:transform .5s; }
+.grid:has(.tile:hover) .tile:not(:hover) { opacity:.7; }
+.tile:hover, .tile:focus-visible { border-color:var(--accent); box-shadow:var(--glow); transform:skew(-6deg) translateY(-6px); }
+.tile:hover .pic img, .tile:hover .pic video { transform:scale(1.06); }
+.tile:hover .arrow { transform:translate(6px); }
+.grid .tile:nth-child(2) { animation-delay:70ms; } .grid .tile:nth-child(3) { animation-delay:.14s; } .grid .tile:nth-child(4) { animation-delay:.21s; }
+
+/* steps */
+.steps-wrap { padding:70px 0 45px; }
+.steps-wrap h2 { margin:0 0 28px; font-size:48px; line-height:1; }
+.steps { display:grid; grid-template-columns:repeat(4, 1fr); gap:32px; }
+.step { display:flex; gap:16px; align-items:flex-start; }
+.step strong { color:var(--accent); font-size:50px; line-height:1; }
+.step b { display:block; font-size:18px; margin-top:4px; }
+.step p { margin:5px 0 0; color:var(--muted); font-size:16px; line-height:1.5; }
+
+footer { display:flex; align-items:center; gap:30px; padding:30px 0 40px; }
+footer p { margin:0; letter-spacing:.3em; font-size:12px; }
+.rule { flex:1; height:1px; background:var(--muted); opacity:.5; }
+
+@keyframes arrive { from { opacity:0; translate:0 24px; } to { opacity:1; translate:0; } }
+@keyframes pulse { 50% { opacity:.35; } }
+
+@media (width <= 1099px) {
+  .inner { width:calc(100% - 64px); }
+  .hero { grid-template-columns:1fr; gap:30px; padding:30px 0 34px; }
+  .hero h1 { font-size:88px; }
+  .motto { display:none; }
+  .grid { grid-template-columns:repeat(3, minmax(0,1fr)); }
+  .steps { grid-template-columns:repeat(2, 1fr); gap:24px; }
+}
+@media (width <= 639px) {
+  .inner { width:calc(100% - 40px); }
+  .bar .inner { gap:16px; height:76px; }
+  .bar .logo img { height:24px; }
+  .nav { display:none; }
+  .bar .btn { height:42px; padding-inline:14px; font-size:15px; }
+  .hero { gap:24px; padding:24px 0; }
+  .hero h1 { font-size:64px; }
+  .hero h1 span { display:block; }
+  .hero p { margin-top:18px; font-size:18px; }
+  .section h2 { padding:0 8px; font-size:40px; }
+  .section .note { padding:0 8px; font-size:15px; }
+  .grid { grid-template-columns:repeat(2, minmax(0,1fr)); gap:14px; padding-inline:8px; }
+  .chip { top:10px; left:8px; padding:6px; font-size:8px; letter-spacing:.12em; }
+  .label { padding:12px 10px; font-size:19px; }
+  .label small { font-size:12px; }
+  .slash { opacity:.4; width:260px; height:45px; left:-180px; }
+  .slash.right { right:-180px; }
+  .steps { grid-template-columns:1fr; }
+  .steps-wrap h2 { font-size:40px; }
+  footer { flex-wrap:wrap; gap:24px; }
+  footer p { font-size:10px; line-height:1.8; }
+  .rule { display:none; }
+  footer .btn { width:100%; justify-content:center; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *:after { transition:none !important; animation:none !important; }
+  .tile:hover, .tile:focus-visible { transform:skew(-6deg); }
+  html { scroll-behavior:auto; }
+}
+</style>
+</head>
+<body>
+<div class="slash" aria-hidden="true"></div>
+<div class="slash right" aria-hidden="true"></div>
+<div class="slash lower" aria-hidden="true"></div>
+
+<header class="bar" id="bar">
+  <div class="inner">
+    <a class="logo" href="#top" aria-label="Livewire"><img src="livewire-lime.svg" alt="Livewire"></a>
+    <nav class="nav">
+      <a href="#ready">Games</a>
+      <a href="#more">More formats</a>
+      <a href="https://www.gamify.com/livewire" target="_blank" rel="noopener">Sports games</a>
+    </nav>
+    <a class="btn" href="mailto:info@livewire.group?subject=Livewire%20playable%20game"><span>Get in touch</span></a>
+  </div>
+</header>
+
+<main class="inner" id="top">
+  <section class="hero">
+    <div>
+      <h1 class="display">Pick your <span>puzzle.</span></h1>
+      <p>Puzzle and casual playables for the 30 second window.</p>
+      <div class="motto" aria-hidden="true">TAP<br>PLAY<br>MATCH<br>WIN</div>
+    </div>
+  </section>
+
+  <section class="section" id="ready">
+    <h2 class="display">Ready to reskin: <span>click to play</span></h2>
+    <p class="note">Built and playable now. Each one is reskinned in your brand with your own end card and call to action.</p>
+    <div class="grid">
+      <a class="tile" href="https://jonnyshan.github.io/heineken-puzzle/" target="_blank" rel="noopener"><div class="pic"><video src="heineken-hover.mp4" poster="heineken.webp" autoplay muted loop playsinline aria-hidden="true"></video></div><div class="chip"><i class="dot"></i>PLAY NOW</div><div class="label"><span>Heineken Jigsaw <i class="arrow">&rarr;</i></span><small>Solve the bottle jigsaw against the clock.</small></div></a>
+      <a class="tile" href="https://jonnyshan.github.io/forgotten-island-memory-match/" target="_blank" rel="noopener"><div class="pic"><video src="forgotten-hover.mp4" poster="forgotten.webp" autoplay muted loop playsinline aria-hidden="true"></video></div><div class="chip"><i class="dot"></i>PLAY NOW</div><div class="label"><span>Forgotten Island <i class="arrow">&rarr;</i></span><small>Memory match over a video scene.</small></div></a>
+      <a class="tile" href="https://gizmo.gamify.com/s3/games.developer.gamify.com/games/8392ac5e-90de-48a5-9d7f-8f64a828e9e2/index.html" target="_blank" rel="noopener"><div class="pic"><video src="flipper-hover.mp4" poster="flipper.webp" autoplay muted loop playsinline aria-hidden="true"></video></div><div class="chip"><i class="dot"></i>PLAY NOW</div><div class="label"><span>Flipper <i class="arrow">&rarr;</i></span><small>Flip the cards to find the pairs.</small></div></a>
+      <a class="tile" href="https://gizmo.gamify.com/s3/games.developer.gamify.com/games/9ed78c7b-6149-45d1-9584-1d7a12ae8a96/index.html" target="_blank" rel="noopener"><div class="pic"><video src="read-hover.mp4" poster="read.webp" autoplay muted loop playsinline aria-hidden="true"></video></div><div class="chip"><i class="dot"></i>PLAY NOW</div><div class="label"><span>Nonstop 4 Letters <i class="arrow">&rarr;</i></span><small>Make 4 letter words before time runs out.</small></div></a>
+      <a class="tile" href="https://gizmo.gamify.com/s3/games.developer.gamify.com/games/4aabee89-854e-4d70-a78d-8b0cbe03a0af/index.html" target="_blank" rel="noopener"><div class="pic"><video src="ten-hover.mp4" poster="ten.webp" autoplay muted loop playsinline aria-hidden="true"></video></div><div class="chip"><i class="dot"></i>PLAY NOW</div><div class="label"><span>TEN <i class="arrow">&rarr;</i></span><small>Number tile puzzle.</small></div></a>
+      <a class="tile" href="https://gizmo.gamify.com/s3/games.developer.gamify.com/games/47bbe391-c503-46c5-8db3-3a637704cd02/index.html" target="_blank" rel="noopener"><div class="pic"><video src="glass-hover.mp4" poster="glass.webp" autoplay muted loop playsinline aria-hidden="true"></video></div><div class="chip"><i class="dot"></i>PLAY NOW</div><div class="label"><span>Filled Glass <i class="arrow">&rarr;</i></span><small>Physics puzzle. Fill the glass to the line.</small></div></a>
+    </div>
+  </section>
+
+  <section class="section" id="more">
+    <h2 class="display">More <span>formats</span></h2>
+    <p class="note">Other styles we can build. These are examples from around the market, shown for the mechanic.</p>
+    <div class="grid">
+      <a class="tile" href="https://mylogo.adictiz.com/hidden-object" target="_blank" rel="noopener"><div class="pic"><video src="hidden-objects.mp4" poster="hidden-objects.webp" autoplay muted loop playsinline aria-hidden="true"></video></div><div class="chip example"><i class="dot"></i>EXAMPLE</div><div class="label"><span>Hidden Object <i class="arrow">&rarr;</i></span><small>Find the hidden items in a busy scene.</small></div></a>
+      <div class="tile"><div class="pic"><video src="tile-match.mp4" poster="tile-match.webp" autoplay muted loop playsinline aria-hidden="true"></video></div><div class="chip example"><i class="dot"></i>EXAMPLE</div><div class="label"><span>Tile Match</span><small>Collect three of a kind before the tray fills.</small></div></div>
+      <div class="tile"><div class="pic"><video src="goods-sort.mp4" poster="goods-sort.webp" autoplay muted loop playsinline aria-hidden="true"></video></div><div class="chip example"><i class="dot"></i>EXAMPLE</div><div class="label"><span>Goods Sort</span><small>Sort products on the shelves into threes.</small></div></div>
+      <div class="tile"><div class="pic"><video src="save-them.mp4" poster="save-them.webp" autoplay muted loop playsinline aria-hidden="true"></video></div><div class="chip example"><i class="dot"></i>EXAMPLE</div><div class="label"><span>Save Them</span><small>Pick the right item to solve the scene.</small></div></div>
+      <a class="tile" href="https://marketing.playable.com/en/games-library-spot-the-difference-pure-pet-food" target="_blank" rel="noopener"><div class="pic"><img src="spotdiff.webp" alt="" loading="lazy"></div><div class="chip example"><i class="dot"></i>EXAMPLE</div><div class="label"><span>Spot the Difference <i class="arrow">&rarr;</i></span><small>Tap the differences between two images.</small></div></a>
+      <a class="tile" href="https://marketing.playable.com/en/games-library-sliding-puzzle-scamp-and-dude" target="_blank" rel="noopener"><div class="pic"><img src="sliding.webp" alt="" loading="lazy"></div><div class="chip example"><i class="dot"></i>EXAMPLE</div><div class="label"><span>Sliding Puzzle <i class="arrow">&rarr;</i></span><small>Slide the tiles to reveal the product.</small></div></a>
+      <a class="tile" href="https://cdn-factory.marketjs.com/en/gardenscapes-playable-ad-demo/index.html" target="_blank" rel="noopener"><div class="pic"><img src="match3.webp" alt="" loading="lazy"></div><div class="chip example"><i class="dot"></i>EXAMPLE</div><div class="label"><span>Match-3 <i class="arrow">&rarr;</i></span><small>Candy Crush style matching.</small></div></a>
+      <a class="tile" href="https://marketing.playable.com/en/games-library-place-the-item-danfoss" target="_blank" rel="noopener"><div class="pic"><img src="dragdrop.webp" alt="" loading="lazy"></div><div class="chip example"><i class="dot"></i>EXAMPLE</div><div class="label"><span>Drag &amp; Drop <i class="arrow">&rarr;</i></span><small>Sort the products into the right zones.</small></div></a>
+      <a class="tile" href="https://chimpanzee-dev.itch.io/ninja-rescue-pin" target="_blank" rel="noopener"><div class="pic"><img src="pinpull.webp" alt="" loading="lazy"></div><div class="chip example"><i class="dot"></i>EXAMPLE</div><div class="label"><span>Pull the Pin <i class="arrow">&rarr;</i></span><small>The logic puzzle from the mobile game ads.</small></div></a>
+    </div>
+  </section>
+
+  <section class="steps-wrap">
+    <h2 class="display">Built for the <span style="color:var(--accent)">ad slot</span></h2>
+    <div class="steps">
+      <div class="step"><strong class="display">01</strong><div><b>One core mechanic</b><p>30 seconds is time for one idea done well.</p></div></div>
+      <div class="step"><strong class="display">02</strong><div><b>Under 2MB</b><p>One self-contained file for Meta, Google, Unity and most networks.</p></div></div>
+      <div class="step"><strong class="display">03</strong><div><b>Self-contained</b><p>No forms inside the ad. The end card pushes to your landing page.</p></div></div>
+      <div class="step"><strong class="display">04</strong><div><b>Sound off</b><p>Makes sense without audio.</p></div></div>
+    </div>
+  </section>
+
+  <footer>
+    <p>BUILT FOR PLAYERS. READY FOR YOUR BRAND.</p>
+    <div class="rule" aria-hidden="true"></div>
+    <a class="btn" href="mailto:info@livewire.group?subject=Livewire%20playable%20game"><span>Start a conversation &rarr;</span></a>
+  </footer>
+</main>
+
+<script>
+(function(){var b=document.getElementById('bar');function f(){b.classList.toggle('scrolled',window.scrollY>10)}window.addEventListener('scroll',f,{passive:true});f();})();
+</script>
+</body>
+</html>
