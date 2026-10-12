@@ -56,10 +56,11 @@ a:focus-visible { outline:3px solid var(--accent); outline-offset:6px; }
 .card:hover, .card:focus-visible { transform:translateY(-6px); border-color:var(--accent); box-shadow:var(--glow); }
 .media { position:relative; aspect-ratio:3/4; background:var(--bg, #000); overflow:hidden; }
 .media img, .media video { position:absolute; inset:0; width:100%; height:100%; display:block; }
-.media img { object-fit:cover; transition:transform .5s, opacity .35s; }
-.media video { object-fit:contain; background:var(--bg, #000); opacity:0; transition:opacity .35s; }
-.card.playing .media video { opacity:1; }
+.media img { object-fit:cover; transition:transform .5s, opacity .35s; z-index:1; }
+.media video { object-fit:contain; background:var(--bg, #000); z-index:0; }
+.card.playing .media img { opacity:0; }
 .card:hover .media img { transform:scale(1.03); }
+.chip { z-index:2; }
 .chip { position:absolute; bottom:14px; left:14px; z-index:2; display:flex; align-items:center; gap:7px; padding:7px 10px; font-size:10px; letter-spacing:.3em; white-space:nowrap; background:color-mix(in srgb, var(--black) 80%, transparent); border-radius:4px; }
 .chip.preview { left:auto; right:14px; letter-spacing:.2em; color:var(--muted); }
 .card.playing .chip.preview { opacity:0; }
